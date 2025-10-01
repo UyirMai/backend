@@ -14,7 +14,7 @@ async function connectToMongo() {
 const client = await connectToMongo();*/
 const mongo =process.env.MONGO_URL;
 
-async function connectToMongo() {
+/*async function connectToMongo() {
   const client = new MongoClient(mongo, {
     tls: true,
     tlsInsecure: false,      // Atlas certificates are valid
@@ -29,7 +29,17 @@ async function connectToMongo() {
     console.error("MongoDB connection failed:", err);
   }
 }
+*/
+async function connectToMongo() {
+  const client = new MongoClient(mongo, {
+    tls: true,
+    tlsAllowInvalidCertificates: false, // keep false for production
+  });
 
+  await client.connect();
+  console.log("Connected to MongoDB");
+  return client;
+}
 const client = await connectToMongo();
 
 /*register query*/ //userdata collection for user data storing
