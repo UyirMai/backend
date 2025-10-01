@@ -2,13 +2,32 @@ import { MongoClient, ObjectId } from "mongodb";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const mongo = process.env.MONGO_URL;
+/*const mongo = process.env.MONGO_URL;
 
 async function connectToMongo() {
   const client = new MongoClient(mongo);
   await client.connect();
   console.log("Connected to MongoDB");
   return client;
+}
+
+const client = await connectToMongo();*/
+const mongo =process.env.MONGO_URL;
+
+async function connectToMongo() {
+  const client = new MongoClient(mongo, {
+    tls: true,
+    tlsInsecure: false,      // Atlas certificates are valid
+    serverSelectionTimeoutMS: 5000
+  });
+
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB");
+    return client;
+  } catch (err) {
+    console.error("MongoDB connection failed:", err);
+  }
 }
 
 const client = await connectToMongo();

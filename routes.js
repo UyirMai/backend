@@ -2,11 +2,11 @@ import express from "express";
 import nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
 dotenv.config();
-import multer from "multer";
-import cron from "node-cron";
+//import multer from "multer";
+//import cron from "node-cron";
 import fs from "fs";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
+//import { v4 as uuidv4 } from "uuid";
 
 import {
   addToCart,
@@ -405,7 +405,7 @@ router.get("/productdetails/:id", async (req, res) => {
 //to  store file
 
 // --- Multer Setup ---
-const storage = multer.diskStorage({
+/*const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname); // keep extension
@@ -441,11 +441,11 @@ router.post(
       res.status(500).json({ message: "Upload failed" });
     }
   }
-);
+);*/
 
 // === Cleanup job (runs every day at midnight) ===
 // Runs every day at midnight
-cron.schedule("0 0 * * *", async () => {
+/*cron.schedule("0 0 * * *", async () => {
   try {
     const expiryDate = new Date(Date.now() - 15 * 24 * 60 * 60 * 1000); // 15 days ago
     //const expiryDate = new Date(Date.now() - 5 * 1000); // For testing (5 sec)
@@ -489,7 +489,7 @@ cron.schedule("0 0 * * *", async () => {
     console.error("Cleanup error:", err);
   }
 });
-
+*/
 /*product details in order page*/
 //to get similar or other products
 router.get("/order/similarproducts", async (req, res) => {
