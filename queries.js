@@ -30,8 +30,11 @@ const mongo =process.env.MONGO_URL;
   }
 }
 */
-async function connectToMongo() {
-  const client = new MongoClient(mongo, {
+
+export async function connectToMongo() {
+  if (client) return client; // reuse if already connected
+
+  client = new MongoClient(mongo, {
     tls: true,
     tlsAllowInvalidCertificates: false, // keep false for production
   });
