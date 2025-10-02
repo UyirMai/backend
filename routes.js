@@ -645,7 +645,6 @@ router.post("/loggedin/inventory", authenticate, async (req, res) => {
       product,
       category,
       quantity,
-      supplier,
       price,
       size,
       color,
@@ -675,16 +674,16 @@ router.post("/loggedin/inventory", authenticate, async (req, res) => {
     if (!existingInventory) {
       // New Inventory Entry
       const newInventory = {
-        sku,
-        product,
-        category,
-        quantity: Number(quantity),
-        supplier,
-        price: Number(price),
-        ...(category === "Wear" && { size, color }),
-        ...(category === "Food" && { quantityType, foodVariant }),
-        date: new Date(),
-      };
+  sku,
+  product,
+  category,
+  quantity: Number(quantity),
+  price: Number(price),
+  ...(category === "Wear" && { size, color }),
+  ...(category === "Food" && { quantityType, foodVariant }),
+  date: new Date(),
+};
+
 
       const insertingInventorydata = await insertingInventory(newInventory);
       if (!insertingInventorydata) {
