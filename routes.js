@@ -674,11 +674,11 @@ router.post("/loggedin/inventory", authenticate, async (req, res) => {
     if (!existingInventory) {
       // New Inventory Entry
       const newInventory = {
-  sku,
+  SKU:sku,
   product,
-  category,
-  quantity: Number(quantity),
-  price: Number(price),
+  Category:category,
+  Quantity: Number(quantity),
+  Price: Number(price),
   ...(category === "Wear" && { size, color }),
   ...(category === "Food" && { quantityType, foodVariant }),
   date: new Date(),
