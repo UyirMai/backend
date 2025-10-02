@@ -4,7 +4,7 @@ dotenv.config();
 
 const mongo = process.env.MONGO_URL;
 
-console.log("MongoDB Connection String:", mongo); // Debugging line
+
 async function connectToMongo() {
   const client = new MongoClient(mongo);
   await client.connect();
@@ -13,54 +13,13 @@ async function connectToMongo() {
 }
 
 const client = await connectToMongo();
-//const mongo =process.env.MONGO_URL;
 
-/*async function connectToMongo() {
-  const client = new MongoClient(mongo, {
-    tls: true,
-    tlsInsecure: false,      // Atlas certificates are valid
-    serverSelectionTimeoutMS: 5000
-  });
-
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB");
-    return client;
-  } catch (err) {
-    console.error("MongoDB connection failed:", err);
-  }
-}
-*/
-
-/*async function connectToMongo() {
-  const client = new MongoClient(mongo, {
-    /*useNewUrlParser: true,
-    useUnifiedTopology: true,
-    tls: true, // ensures SSL/TLS connection
-  });
-
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB successfully!");
-    // Use the client here
-    const db = client.db(database);
-    // Example: list collections
-    const collections = await db.collections();
-    console.log("Collections:", collections.map(c => c.collectionName));
-  } catch (error) {
-    console.error("MongoDB connection error:", error);
-  } finally {
-    await client.close();
-  }
-}*/
-//const client=await connectToMongo();
 
 /*register query*/ //userdata collection for user data storing
 export async function insertinguser(newUser) {
   try {
     return await client.db("uyirmai").collection("userdata").insertOne(newUser);
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -72,8 +31,7 @@ export async function checkexistinguser(email) {
       .collection("userdata")
       .findOne({ email: email });
   } catch (error) {
-    console.log(error);
-    return false;
+        return false;
   }
 }
 
@@ -85,14 +43,12 @@ export async function userData(id) {
       .collection("userdata")
       .findOne({ _id: new ObjectId(id) });
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
 //update user profile data
 export async function updateuserprofile(data) {
   const { _id, ...updatedata } = data;
-  console.log("destructured data:", _id, ...updatedata)
   try {
     return await client
       .db("uyirmai")
@@ -103,7 +59,6 @@ export async function updateuserprofile(data) {
         { returnDocument: "after" }
       );
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -115,7 +70,6 @@ export async function insertingaddress(address){
       .collection("address")
       .insertOne(address); 
   }catch(error){
-    console.log(error);
     return false
   }
 }
@@ -135,7 +89,6 @@ export async function getUserdata(email) {
       .collection("userdata")
       .findOne({ email: email });
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -146,28 +99,7 @@ export async function setcode(email, code) {
       .db("uyirmai")
       .collection("userdata")
       .findOneAndUpdate({ email: email }, { $set: { code: code } });
-    /*return await client
-  .db("uyirmai")
-  .collection("userdata")
-  .findOneAndUpdate(
-    { email: email },
-    {
-      $set: {
-        code: code,
-        codeExpiry: new Date(Date.now() + 5 * 60 * 1000) // expires in 5 minutes
-      }
-    },
-    { returnDocument: "after" }
-  );
-  if (user.code === inputCode && user.codeExpiry > new Date()) {
-  // valid
-} else {
-  // expired or invalid
-}
-
- */
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -186,7 +118,6 @@ export async function updateuser(email, newpass) {
         { returnDocument: "after" }
       );
   } catch (err) {
-    console.log(err);
     return false;
   }
 }
@@ -198,7 +129,6 @@ export async function Screenshot(email, fileUrl) {
       .collection("payment")
       .insertOne({ email: email, fileurl: fileUrl, createdAt: new Date() });
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -211,7 +141,6 @@ export async function Screenshottofind(expiryDate) {
       .find({ createdAt: { $lt: expiryDate } })
       .toArray();
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -223,7 +152,6 @@ export async function Screenshotdelete(ids) {
       .collection("payment")
       .deleteMany({ _id: { $in: ids } });
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -247,7 +175,6 @@ export async function togetinventory(id) {
       .collection("inventory")
       .findOne({ _id: new ObjectId(id) });
   } catch (err) {
-    console.log(err);
     return false;
   }
 }
@@ -260,7 +187,6 @@ export async function toPutData(editedProduct, id) {
       .collection("inventory")
       .findOneAndUpdate({ _id: new ObjectId(id) }, { $set: updateFields });
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -272,7 +198,6 @@ export async function toDeleteinventory(id) {
       .collection("inventory")
       .findOneAndDelete({ _id: new ObjectId(id) });
   } catch (err) {
-    console.log(err);
     return false;
   }
 }
@@ -417,7 +342,6 @@ export async function updateproduct(editedProduct, id) {
       .collection("products")
       .findOneAndUpdate({ _id: new ObjectId(id) }, { $set: updateFields });
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -472,7 +396,6 @@ export async function getOrderHistorybyuser(id){
       .find({ UserId: id })
       .toArray();
   }catch(error){
-    console.log(error);
     return false;
   }
 }
@@ -527,7 +450,6 @@ export async function getSimilarproducts(category, Id) {
       })
       .toArray();
   } catch (err) {
-    console.log(err);
     return false;
   }
 }
@@ -540,7 +462,6 @@ export async function getotherproducts(category){
         .find({ category: { $ne: category } }) 
       .toArray(); 
   }catch(error){
-    console.log(error);
     return false;
   }
 }
@@ -574,28 +495,14 @@ export async function addToCart(userId, productId) {
   }
 }
 //get cart data
-/*export async function gettingcartdata(id) {
-  try {
-    return await client
-      .db("uyirmai")
-      .collection("cart")
-      .find({ userId: id})
-      .toArray();
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}*/
 export async function gettingcartdata(userId) {
   try {
-    console.log("userId:", userId);
     return await client
       .db("uyirmai")
       .collection("cart")
       .find({ userId: userId })
       .toArray();
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
@@ -627,7 +534,6 @@ export async function togetProducts(productIds) {
 }*/
 export async function updateInventory(product, quantityChange) {
   try {
-    console.log("Updating inventory:", product, quantityChange);
     const result = await client
       .db("uyirmai")
       .collection("inventory")
@@ -638,11 +544,8 @@ export async function updateInventory(product, quantityChange) {
           $set: { UpdatedAt: new Date() },
         }
       );
-
-    console.log("Update result:", result);
     return result;
   } catch (error) {
-    console.error("Error updating inventory:", error);
     return false;
   }
 }

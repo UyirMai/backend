@@ -40,7 +40,6 @@ export async function genjwt(user) {
 export async function genjwtforuser(user) {
   const secret = process.env.jwt_secret;
   try {
-    console.log("userid:",user._id)
     const token = jwt.sign(
       { userid:user._id,useremail: user.email},
       secret
@@ -57,7 +56,6 @@ function verifytoken(token){
         const decode=jwt.verify(token,secret)
         return decode;
     }catch(err){
-        console.log(err);
         throw new Error("Token verification failed");
     }
 }
@@ -70,7 +68,6 @@ export async function authenticate(req,res,next){
         }
         const decoded = verifytoken(token);
         req.user = decoded;
-        console.log(req.user)
         next();
     }catch(err){
         console.error("Authentication error:", err);
@@ -95,41 +92,14 @@ export  function authorize(...roles){
 export async function gencode(){
   try{
     const digit= Math.floor(100000+Math.random()*900000).toString();
-    console.log("code:",digit);
     return digit
   }catch(error){
     console.log("Error Generating code")
   }
 }
 
-
-/*let lastOrder = {
-  year: null,
-  month: null,
-  counter: 0
-};
-
-export async function generateOrderId() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0"); // 01-12
-  const date = String(now.getDate()).padStart(2, "0"); // 01-31
-
-  // Reset counter if month/year changes
-  if (lastOrder.year !== year || lastOrder.month !== month) {
-    lastOrder.year = year;
-    lastOrder.month = month;
-    lastOrder.counter = 1;
-  } else {
-    lastOrder.counter++;
-  }
-
-  return `UM-${year}-${month}-${lastOrder.counter}`;
-}*/
-
 //to generate sku
 export const generateSKU = (productName, category, variant) => {
-  console.log("Generating SKU with:", { productName, category, variant });
   const nameCode = productName.toUpperCase().slice(0, 4); // first 4 letters
   const categoryCode = category.toUpperCase().slice(0, 3); // first 3 letters of category
 
