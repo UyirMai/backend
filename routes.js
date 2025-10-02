@@ -644,6 +644,7 @@ router.post("/loggedin/inventory", authenticate, async (req, res) => {
     const {
       product,
       category,
+      sku,
       quantity,
       price,
       size,
@@ -665,8 +666,7 @@ router.post("/loggedin/inventory", authenticate, async (req, res) => {
       variant = `${quantityType || ""}-${foodVariant || ""}`;
     }
 
-    // ✅ Generate unique SKU
-    const sku = generateSKU(product, category, variant);
+  
 
     // ✅ Check if inventory already exists
     const existingInventory = await getInventory(sku);
@@ -753,6 +753,7 @@ router.post(
       const {
         product,
         category,
+        sku,
         quantity,
         supplier,
         price,
@@ -777,7 +778,7 @@ router.post(
       }
 
       // build SKU differently for each category
-      let sku;
+      /*let sku;
       if (category === "Wear") {
         sku = generateSKU(product, category, `${size}${color}`);
       } else if (category === "Food") {
@@ -785,7 +786,7 @@ router.post(
       } else {
         sku = generateSKU(product, category);
       }
-
+*/
      const newInventory = {
   product,
   Category: category,
