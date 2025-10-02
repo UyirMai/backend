@@ -637,6 +637,77 @@ router.delete("/loggedin/dashboard/:id", async (req, res) => {
     res.status(500).send({ success: false, message: "Internal server error" });
   }
 });
+/*inventory api */
+
+router.post("/loggedin/inventory", authenticate, async (req, res) => {
+  try {
+    const {
+      product,
+      category,
+      quantity,
+      supplier,
+      price,
+      size,
+      color,
+      quantityType,
+      foodVariant,
+    } = req.body;
+
+    // Validation
+    if (!product || !category || !quantity || !supplier || !price) {
+      return res.status(400).send("Missing required fields");
+    }
+
+    // ✅ Build variant info for SKU
+    let variant = null;
+    if (category === "Wear") {
+      variant = `${size || ""}-${color || ""}`;
+    } else if (category === "Food") {
+      variant = `${quantityType || ""}-${foodVariant || ""}`;
+    }
+
+    // ✅ Generate unique SKU
+    const sku = generateSKU(product, category, variant);
+
+    // ✅ Check if inventory already exists
+    const existingInventory = await getInventory(sku);
+
+    if (!existingInventory) {
+      // New Inventory Entry
+      const newInventory = {
+        sku,
+        product,
+        category,
+        quantity: Number(quantity),
+        supplier,
+        price: Number(price),
+        ...(category === "Wear" && { size, color }),
+        ...(category === "Food" && { quantityType, foodVariant }),
+        date: new Date(),
+      };
+
+      const insertingInventorydata = await insertingInventory(newInventory);
+      if (!insertingInventorydata) {
+        return res.status(400).send("Failed to add inventory");
+      }
+
+      return res.status(201).send("Inventory added successfully");
+    } else {
+      // Update existing inventory (increase quantity)
+      const updatedQuantity = existingInventory.quantity + Number(quantity);
+
+      const updateInventory = await updatingInventory(sku, updatedQuantity);
+      if (!updateInventory) {
+        return res.status(400).send("Failed to update inventory quantity");
+      }
+
+      return res.status(201).send("Inventory quantity updated successfully");
+    }
+  } catch (error) {
+    console.error("Error handling inventory:", error);
+    res.status(500).send("Internal server error");
+  }
+});
 
 /*purchase api*/
 //to get purchase history
