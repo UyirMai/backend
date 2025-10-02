@@ -2,8 +2,9 @@ import { MongoClient, ObjectId } from "mongodb";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-/*const mongo = process.env.MONGO_URL;
+const mongo = process.env.MONGO_URL;
 
+console.log("MongoDB Connection String:", mongo); // Debugging line
 async function connectToMongo() {
   const client = new MongoClient(mongo);
   await client.connect();
@@ -11,8 +12,8 @@ async function connectToMongo() {
   return client;
 }
 
-const client = await connectToMongo();*/
-const mongo =process.env.MONGO_URL;
+const client = await connectToMongo();
+//const mongo =process.env.MONGO_URL;
 
 /*async function connectToMongo() {
   const client = new MongoClient(mongo, {
@@ -31,19 +32,28 @@ const mongo =process.env.MONGO_URL;
 }
 */
 
-export async function connectToMongo() {
-  if (client) return client; // reuse if already connected
-
-  client = new MongoClient(mongo, {
-    tls: true,
-    tlsAllowInvalidCertificates: false, // keep false for production
+/*async function connectToMongo() {
+  const client = new MongoClient(mongo, {
+    /*useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true, // ensures SSL/TLS connection
   });
 
-  await client.connect();
-  console.log("Connected to MongoDB");
-  return client;
-}
-const client = await connectToMongo();
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB successfully!");
+    // Use the client here
+    const db = client.db(database);
+    // Example: list collections
+    const collections = await db.collections();
+    console.log("Collections:", collections.map(c => c.collectionName));
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+  } finally {
+    await client.close();
+  }
+}*/
+//const client=await connectToMongo();
 
 /*register query*/ //userdata collection for user data storing
 export async function insertinguser(newUser) {
