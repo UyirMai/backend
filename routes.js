@@ -653,7 +653,7 @@ router.post("/loggedin/inventory", authenticate, async (req, res) => {
     } = req.body;
 
     // Validation
-    if (!product || !category || !quantity || !supplier || !price) {
+    if (!product || !category || !quantity  || !price) {
       return res.status(400).send("Missing required fields");
     }
 
